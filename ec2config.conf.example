@@ -1,0 +1,18 @@
+ec2_access_key 32charHexkey
+ec2_secret_key 32charHexkey
+ec2_url http://localhost:8773/services/Cloud
+context_file_before /home/of/user/ec2/ec2_context_before
+context_file_after /home/of/user/ec2/ec2_context_after
+image_type ami-00000001
+security_group cernvm-secgroup
+key_name username
+instance_type cernvm.tiny
+limit_instances 3
+machine_role_tag OSWorkerNode
+
+#aliec2d
+interval 10
+#kill_on_state DeadVM
+#search_dir /share/home/alienvo/scripts/
+#log_file /share/home/alienvo/aliec2d.log
+

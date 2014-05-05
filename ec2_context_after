@@ -1,0 +1,30 @@
+ALIEC2_EOF
+#" > agent_startup.sh # end of alien-generated script
+chmod +x agent_startup.sh
+nohup ./agent_startup.sh > agent_out.log 2>&1 &
+echo $! > /tmp/ja.pid
+
+#cat > agent_monitor.sh << 'EOF'
+#/bin/bash
+
+#PROCESSID=`cat /tmp/ja.pid`
+#echo -e "$PROCESSID" > /tmp/agentMon
+
+#while 1; then
+#	cat /proc/$PROCESSID/status >> /tmp/agentMon
+#	sleep 60
+#done
+#EOF
+
+echo "Created agent_startup.sh in " `pwd` > /tmp/done
+exit
+
+[amiconfig]
+plugins = cernvm
+
+[cernvm]
+organisations = alice
+repositories = atlas,alice,grid,atlas-condb,sft
+shell = /bin/bash
+environment = ALIEN_ORGANISATION=ALIENBERGEN,ALIEN_WORKDIR=$HOME/alien/work,ALIEN_CACHE=$HOME/alien/cache,ALIEN_DOMAIN=os.hib.no,ALIEN_LDAP_DN="cs.hib.no:8389/o=ALIENBERGEN,dc=hib,dc=no"
+

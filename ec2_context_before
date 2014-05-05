@@ -1,0 +1,16 @@
+#!/bin/bash
+touch /tmp/done
+echo "Started" >> /tmp/done
+
+
+
+echo "Creating startup-script" >> /tmp/done
+# start of alien-generated script
+cat > agent_startup.sh << 'ALIEC2_EOF'
+
+export PATH=$PATH:/cvmfs/alice.cern.ch/bin/
+export ALIEN_ORGANISATION=ALIENBERGEN
+export ALIEN_WORKDIR=$HOME/alien/work #Maa stemme med verdi i alienbergen.conf for WORK_DIR
+export ALIEN_CACHE=$HOME/alien/cache  #Maa stemme med verdi i alienbergen.conf for CACHE_DIR
+export ALIEN_DOMAIN=os.hib.no
+export ALIEN_LDAP_DN="cs.hib.no:8389/o=ALIENBERGEN,dc=hib,dc=no"
