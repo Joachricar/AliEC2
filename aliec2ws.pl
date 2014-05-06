@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+# userdata 169.254.169.254/latest/user-data
 use strict;
 use warnings;
 
@@ -33,6 +33,10 @@ setting log4perl => {
 };
 setting logger => 'log4perl';
 
+
+#set server => "192.168.32.1";
+set port => 8080;
+
 my $alienHome = $ENV{ALIEN_HOME};
 print "Using " . $alienHome . " as config directory\n";
 my $ec2config = new Config::Simple($alienHome . '/ec2.conf');
@@ -45,21 +49,40 @@ my $ec2 = AliEC2::EC2->new($ec2config);
 sub setAlive {
     my $id = shift; 
     my $msg = $db->setStatus($id);
+    error "$id is alive";
     return ("Setting " . $id . " as alive: " . $msg);
 };
 
 sub deleteVM {
     my $id = shift;
     my $msg = $db->delete($id);
+    
+    if($ec2->deleteVirtualMachine($id) == 0) {
+        error "$id deleted";
+    }
+    else {
+        error "couldn't delete $id";
+    }
+    
     return ("Deleting " . $id . ": " . $msg);
 };
 
 sub addVM {
-    my $id = shift;
     my $job = shift;
     my $script = shift;
-    my $msg = $db->add($id, $job);
-    $ec2->spawnVirtualMachine($id, $job, $script);
+    my $msg = "";
+    
+    if($db->existJobID($job) == 1) {
+        error "Job id exist";
+        return ("ERROR Job ID exist");
+    }
+    
+    my $id = $ec2->spawnVirtualMachine($job, $script);
+    $msg = $db->add($id, $job);
+    
+    if($id eq "error") {
+        $msg = "Error starting instance";
+    }
     return ("Adding " . $id . " with jobID " . $job . ": " . $msg);
 };
 
@@ -70,13 +93,17 @@ get '/alive/:id' => sub {
 
 get '/done/:id' => sub {
 	my $id = param('id');
+	error "$id is done";
     deleteVM($id);
 };
 
-get '/spawn/:id/:job/:script' => sub {
-	my $id = param('id');
+post '/spawn/:job' => sub {
 	my $jid = param('job');
-    addVM($id, $jid);
+	
+	my $script = param('script');
+	
+	print $script;
+    addVM($jid, $script);
 };
 
 threads->create(sub {
@@ -89,7 +116,7 @@ threads->create(sub {
         	error "$machine is dead. Killing it.";
         	deleteVM($machine);
         }
-    }   
+    }
 });
 
 dance;

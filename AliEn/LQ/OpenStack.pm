@@ -25,8 +25,8 @@ sub submit {
    	#my $executable  = shift;
     my $command   = join " ", @_;
 
-	$self->info("reading config file ".$ENV{HOME}."/.alien/ec2config.conf");
-	my $ec2config = new Config::Simple($ENV{HOME} . "/.alien/ec2config.conf");
+	$self->info("reading config file ".$ENV{ALIEN_HOME}."/ec2.conf");
+	my $ec2config = new Config::Simple($ENV{ALIEN_HOME} . "/ec2.conf");
 	
 	my $error = 0;
 	$command =~ s/"/\\"/gs;
