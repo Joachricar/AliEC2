@@ -79,21 +79,15 @@ sub submit {
 	$userdata .= $document . "\n";
 	$userdata .= do { local $/; <CONTEXTFILEAFTER>};
 	close CONTEXTFILEBEFORE;
-	close CONTEXTFILEAFTER;
-	
+	close CONTEXTFILEAFTER;	
 	
 	print FH $userdata;
 	close FH;
 	my $encdata = encode('UTF-8', $userdata, Encode::LEAVE_SRC | Encode::FB_CROAK);
 
-	print "ENCODED DATA:\n";
-	print $encdata;
-
 	my $data = $encdata;
 
 	my $url = "http://127.0.0.1:8080/spawn/$id";
-
-	print "CURL DRITT\n";
 
 	my $curl = new Net::Curl::Easy();
 
