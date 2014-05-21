@@ -39,7 +39,8 @@ sub submit {
   	$name =~ s{\.JobAgent}{};
   	$name =~ s{^(.{14}).*$}{$1};
 
-  	my $execute=$command;
+	$self->info("possible job agent ID: " . $1);
+	my $execute=$command;
   	$execute =~ s{^.*/([^/]*)$}{$ENV{HOME}/$1}; #env HOME
 
   	system ("cp",$command, $execute);

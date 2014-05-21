@@ -2,7 +2,19 @@
 touch /tmp/done
 echo "Started" >> /tmp/done
 
+# AliEC2 Env-vars
+# URL of the AliEC2 web service
+export ALIEC2_URL="http://10.0.0.35:3000"
+# The interval which the CernVM instance should update AliEC2 in seconds
+export ALIEC2_INTERVAL=60
 
+__updateStatus() {
+	wget $ALIEC2_URL/alive/$(hostname)
+	sleep $ALIEC2_INTERVAL
+}
+
+# Run the update loop in the background.
+__updateStatus &
 
 echo "Creating startup-script" >> /tmp/done
 # start of alien-generated script

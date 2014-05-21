@@ -1,3 +1,4 @@
+wget $ALIEC2_URL/done/$(hostname)
 ALIEC2_EOF
 #" > agent_startup.sh # end of alien-generated script
 chmod +x agent_startup.sh
