@@ -15,4 +15,4 @@ interval 10
 #kill_on_state DeadVM
 #search_dir /share/home/alienvo/scripts/
 #log_file /share/home/alienvo/aliec2d.log
-
+aliec2_host 127.0.0.1:8000

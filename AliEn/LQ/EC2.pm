@@ -13,6 +13,7 @@ use strict;
 use utf8;
 use AliEn::Database::CE;
 use Data::Dumper;
+use Encode qw(encode);
 
 use Net::Curl::Easy qw(:constants);
 use Net::Curl::Form qw(:constants);
@@ -87,8 +88,10 @@ sub submit {
 	my $encdata = encode('UTF-8', $userdata, Encode::LEAVE_SRC | Encode::FB_CROAK);
 
 	my $data = $encdata;
-
-	my $url = "http://127.0.0.1:8080/spawn/$id";
+	
+	my $id = $$;
+	my $host = $ec2config->param('host');
+	my $url = "http://$host/spawn/$id";
 
 	my $curl = new Net::Curl::Easy();
 
