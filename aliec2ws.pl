@@ -73,8 +73,9 @@ sub addVM {
     my $msg = "";
     
     if($db->existJobID($job) == 1) {
-        error "Job id exist";
-        return ("ERROR Job ID exist");
+        #ignoring this for now.
+		#error "Job id exist. ignoring";
+        #return ("ERROR Job ID exist");
     }
     
     my $id = $ec2->spawnVirtualMachine($job, $script);
