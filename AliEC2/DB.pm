@@ -1,4 +1,4 @@
-package AliEC2::SQLite;
+package AliEC2::DB;
 
 use strict;
 use warnings;
@@ -10,6 +10,7 @@ use Log::Log4perl qw< :easy >;
 use DateTime;
 use DateTime::Duration;
 use DateTime::Format::DBI;
+use Config::Simple;
 
 setting log4perl => {
    tiny => 0,
@@ -45,11 +46,18 @@ use Exporter qw(import);
 our @EXPORT_OK = qw(add delete exist setStatus getStatus);
 
 my $dbh;
+my $ec2config;
 
 sub new {
-    my ($class, %args) = @_;
-    
-    $dbh = DBI->connect("dbi:SQLite:dbname=aliec2db","","");
+    my ($class, $conf, %args) = @_;
+	$ec2config = $conf;	    
+	my $db_type = $ec2config->param('db_type');
+	my $db_host = $ec2config->param('db_host') or '';
+	my $db_name = $ec2config->param('db_name');
+	my $db_user = $ec2config->param('db_user') or '';
+	my $db_pass = $ec2config->param('db_pass') or '';
+
+    $dbh = DBI->connect("dbi:$db_type:dbname=$db_name;host=$db_host","$db_user","$db_pass");
     $dbh->do("create table if not exists instances (
         InstanceName Text PRIMARY KEY,
         JobID Integer,
@@ -126,7 +134,7 @@ sub existJobID {
 };
 
 sub setStatusTo {
-    
+ 
     my ($self, $id, $status) = @_;
     
     if($self->existVM($id)) {
